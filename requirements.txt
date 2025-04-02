@@ -2,5 +2,5 @@ torch==2.3.0
 torchvision==0.18.0
 numpy==1.26.4
 matplotlib==3.8.4
-transformers==4.40.1
+transformers==4.48.0
 accelerate>=0.26.0 
