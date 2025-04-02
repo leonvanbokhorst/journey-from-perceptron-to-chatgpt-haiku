@@ -35,9 +35,9 @@ DATASET_PATH = "haiku_dataset.txt"
 # Fine-tuning output
 OUTPUT_DIR = "./haiku_bot_finetuned"
 # Training parameters
-NUM_TRAIN_EPOCHS = 3  # Adjust as needed
-PER_DEVICE_TRAIN_BATCH_SIZE = 4  # Adjust based on GPU memory
-SAVE_STEPS = 500  # Save checkpoints periodically
+NUM_TRAIN_EPOCHS = 1  # Adjust as needed -> Set to 1 for test
+PER_DEVICE_TRAIN_BATCH_SIZE = 1  # Adjust based on GPU memory -> Set to 1 for test
+SAVE_STEPS = 10  # Save checkpoints periodically -> Reduce for test
 
 
 # --- 1. Data Preparation ---
@@ -234,37 +234,41 @@ if __name__ == "__main__":
     """
     # --- Phase 1: Fine-tuning (Run this part first) ---
     # Check if dataset exists
-    if not os.path.exists(DATASET_PATH):
-        print(f"ERROR: Dataset file not found at {DATASET_PATH}")
-        print(
-            "Please create this file and populate it with Haiku poems, one per line, separated by newlines."
-        )
-        # Example haiku_dataset.txt content:
-        # Old pond, still frog leaps -
-        # sound echoes in the water.
-        #
-        # First autumn morning
-        # the mirror I stare into
-        # shows my father's face.
-        exit(1)
+    # if not os.path.exists(DATASET_PATH):
+    #     print(f"ERROR: Dataset file not found at {DATASET_PATH}")
+    #     print(
+    #         "Please create this file and populate it with Haiku poems, one per line, separated by newlines."
+    #     )
+    #     # Example haiku_dataset.txt content:
+    #     # Old pond, still frog leaps -
+    #     # sound echoes in the water.
+    #     #
+    #     # First autumn morning
+    #     # the mirror I stare into
+    #     # shows my father's face.
+    #     exit(1)
 
     # model, tokenizer = load_model_and_tokenizer(PRETRAINED_MODEL_NAME)
     # dataset = prepare_dataset(tokenizer, DATASET_PATH)
     # data_collator, training_args = setup_training(tokenizer, dataset)
+    # # Adjust max_steps for a very short run
+    # training_args.max_steps = 5 # Limit to 5 steps for quick test
     # run_training(model, tokenizer, dataset, data_collator, training_args)
-    # print("\n--- Fine-tuning complete. Model saved in ", OUTPUT_DIR, "---")
+    # print("\n--- Fine-tuning complete (Test Run). Model saved in ", OUTPUT_DIR, "---")
     # print("Comment out the training lines and uncomment the inference line below to chat.")
 
     # --- Phase 2: Inference (Run this after fine-tuning) ---
     # Ensure the fine-tuned model exists before running inference
     if os.path.exists(OUTPUT_DIR) and os.path.exists(
-        os.path.join(OUTPUT_DIR, "pytorch_model.bin")
+        os.path.join(
+            OUTPUT_DIR, "pytorch_model.bin"
+        )  # Check for model file specifically
     ):
         run_inference(model_path=OUTPUT_DIR)
     else:
         print(f"\nFine-tuned model not found in {OUTPUT_DIR}.")
         print(
-            "Please run the fine-tuning phase first (uncomment training lines above)."
+            "Please run the fine-tuning phase first (or ensure it completed successfully)."
         )
 
     # To run only inference after training, comment out the training lines (approx lines 119-122)
